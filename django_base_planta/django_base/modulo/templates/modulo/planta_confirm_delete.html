@@ -1,0 +1,16 @@
+{% extends "modulo/base.html" %}
+
+{% block title %}Eliminar planta{% endblock %}
+
+{% block content %}
+<h1>Eliminar planta</h1>
+
+<p>¿Seguro que quieres eliminar <strong>{{ object.nombre }}</strong> ({{ object.especie }})?
+   Esta acción no se puede deshacer.</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+    <a class="btn btn-ghost" href="{{ object.get_absolute_url }}">Cancelar</a>
+</form>
+{% endblock %}

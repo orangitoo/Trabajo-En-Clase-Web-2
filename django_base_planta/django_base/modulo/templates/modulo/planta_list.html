@@ -1,0 +1,72 @@
+{% extends "modulo/base.html" %}
+
+{% block title %}Mis plantas{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <h1>Mis plantas</h1>
+    <a class="btn btn-primary" href="{% url 'planta_crear' %}">+ Nueva planta</a>
+</div>
+
+<form method="get" class="filtros">
+    {% for field in filtro_form %}
+        <div class="field">
+            {{ field.label_tag }}
+            {{ field }}
+        </div>
+    {% endfor %}
+    <div class="field actions">
+        <button type="submit" class="btn">Filtrar</button>
+        <a class="btn btn-ghost" href="{% url 'planta_lista' %}">Limpiar</a>
+    </div>
+</form>
+
+{% if plantas %}
+    <table class="tabla">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Especie</th>
+                <th>Ubicación</th>
+                <th>Riego</th>
+                <th>Tóxica</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for planta in plantas %}
+                <tr>
+                    <td><a href="{{ planta.get_absolute_url }}">{{ planta.nombre }}</a></td>
+                    <td>{{ planta.especie }}</td>
+                    <td>{{ planta.get_ubicacion_display }}</td>
+                    <td>cada {{ planta.frecuencia_riego_dias }} días</td>
+                    <td>{% if planta.es_toxica %}Sí{% else %}No{% endif %}</td>
+                    <td class="row-actions">
+                        <a href="{% url 'planta_editar' planta.pk %}">Editar</a>
+                        <a class="danger" href="{% url 'planta_eliminar' planta.pk %}">Eliminar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if is_paginated %}
+        <nav class="paginacion" aria-label="Paginación">
+            {% if page_obj.has_previous %}
+                <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page=1">« Primera</a>
+                <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">‹ Anterior</a>
+            {% endif %}
+
+            <span class="actual">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                ({{ page_obj.paginator.count }} resultados)</span>
+
+            {% if page_obj.has_next %}
+                <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.next_page_number }}">Siguiente ›</a>
+                <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.paginator.num_pages }}">Última »</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+{% else %}
+    <p class="vacio">No hay plantas que mostrar.</p>
+{% endif %}
+{% endblock %}

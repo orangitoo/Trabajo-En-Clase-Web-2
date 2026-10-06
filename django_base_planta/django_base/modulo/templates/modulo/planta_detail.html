@@ -1,0 +1,25 @@
+{% extends "modulo/base.html" %}
+
+{% block title %}{{ object.nombre }}{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <h1>{{ object.nombre }}</h1>
+    <div>
+        <a class="btn" href="{% url 'planta_editar' object.pk %}">Editar</a>
+        <a class="btn btn-danger" href="{% url 'planta_eliminar' object.pk %}">Eliminar</a>
+    </div>
+</div>
+
+<dl class="detalle">
+    <dt>Especie</dt><dd>{{ object.especie }}</dd>
+    <dt>Ubicación</dt><dd>{{ object.get_ubicacion_display }}</dd>
+    <dt>Frecuencia de riego</dt><dd>Cada {{ object.frecuencia_riego_dias }} días</dd>
+    <dt>Fecha de adquisición</dt><dd>{{ object.fecha_adquisicion|date:"d/m/Y" }}</dd>
+    <dt>Tóxica para mascotas</dt><dd>{% if object.es_toxica %}Sí{% else %}No{% endif %}</dd>
+    <dt>Notas de cuidado</dt><dd>{{ object.notas|default:"—"|linebreaksbr }}</dd>
+    <dt>Registrada</dt><dd>{{ object.creada_en|date:"d/m/Y H:i" }}</dd>
+</dl>
+
+<p><a href="{% url 'planta_lista' %}">← Volver a la lista</a></p>
+{% endblock %}
